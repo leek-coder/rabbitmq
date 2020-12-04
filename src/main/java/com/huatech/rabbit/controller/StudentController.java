@@ -1,5 +1,7 @@
 package com.huatech.rabbit.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,4 +14,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "/student")
 public class StudentController {
+    private Logger logger = LoggerFactory.getLogger(StudentController.class);
 }
