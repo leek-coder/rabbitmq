@@ -57,6 +57,7 @@ public class RabbitConfiguration {
                 System.out.println("message" + message);
                 System.out.println("replyCode" + replyCode);
                 System.out.println("replyText" + replyText);
+                System.out.println("test fix bug  12-04");
                 System.out.println("exchange" + exchange);
                 System.out.println("routingKey" + routingKey);
             }
