@@ -32,9 +32,34 @@ public class MessageConsumerHandler {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-
-
         }
+
+    }
+
+    /**
+     * 监听下单队列
+     *
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = RabbitConstants.PLACE_ORDER_QUEUE, containerFactory = "simpleRabbitListenerContainerFactory")
+    public void processOrder(Channel channel, Message message) throws Exception {
+        System.out.println("消息拒绝");
+        //是否重回消息队列,消息拒绝不重回队列
+        channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+    }
+
+    /**
+     * 死信队列
+     *
+     * @param channel
+     * @param message
+     */
+    @RabbitListener(queues = RabbitConstants.DEAD_ORDER_QUEUE, containerFactory = "simpleRabbitListenerContainerFactory")
+    public void processDeadOrder(Message message, Channel channel) throws Exception {
+
+        System.out.println("死信队列收到信息为：" + new String(message.getBody(), "UTF-8"));
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
 
     }
 

@@ -11,6 +11,9 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author like
  * 发送确认：发送到交换机成功
@@ -29,7 +32,7 @@ public class RabbitConfiguration {
         //设置消息手动确认
         rabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         //设置消息预取的数量
-        rabbitListenerContainerFactory.setPrefetchCount(50);
+        rabbitListenerContainerFactory.setPrefetchCount(1);
         return rabbitListenerContainerFactory;
     }
 
@@ -93,5 +96,66 @@ public class RabbitConfiguration {
     public Binding exchangeBindQueue() {
         return BindingBuilder.bind(queue()).to(directExchange()).with(RabbitConstants.TEST_QUEUE);
     }
+
+
+    /**
+     * 下订单交换机
+     *
+     * @return
+     */
+    @Bean
+    public DirectExchange placeOrderExchange() {
+        return new DirectExchange(RabbitConstants.PLACE_ORDER_EXCHANGE, true, false);
+    }
+
+    /**
+     * 下订单队列 ：业务队列
+     *
+     * @return
+     */
+    @Bean
+    public Queue placeOrderQueue() {
+        Map<String, Object> map = new HashMap(2);
+        map.put("x-dead-letter-exchange", RabbitConstants.DEAD_ORDER_EXCHANGE);
+        map.put("x-dead-letter-routing-key", RabbitConstants.DEAD_ROUTE_KEY);
+        return new Queue(RabbitConstants.PLACE_ORDER_QUEUE, true, false, false, map);
+    }
+
+    /**
+     * 绑定交换机与队列
+     *
+     * @return
+     */
+    @Bean
+    public Binding orderExchangeBind() {
+        return BindingBuilder.bind(placeOrderQueue()).to(placeOrderExchange()).with(RabbitConstants.PLACE_ORDER_QUEUE);
+    }
+
+
+    /**
+     * 定义订单死信交换机
+     *
+     * @return
+     */
+    @Bean
+    public DirectExchange deadOrderExchange() {
+        return new DirectExchange(RabbitConstants.DEAD_ORDER_EXCHANGE, true, false);
+    }
+
+    /**
+     * 死信队列
+     *
+     * @return
+     */
+    @Bean
+    public Queue deadOrderQueue() {
+        return new Queue(RabbitConstants.DEAD_ORDER_QUEUE, true, false, false);
+    }
+
+    @Bean
+    public Binding deadLetterBinding() {
+        return BindingBuilder.bind(deadOrderQueue()).to(deadOrderExchange()).with(RabbitConstants.DEAD_ROUTE_KEY);
+    }
+
 
 }

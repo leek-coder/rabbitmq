@@ -21,4 +21,10 @@ public class MessageUtils {
         //交换机，路由key，消息实体
         rabbitTemplate.convertAndSend(RabbitConstants.TEST_EXCHANGE, RabbitConstants.TEST_QUEUE, message,correlationData);
     }
+
+    public void order(String message) {
+        CorrelationData correlationData = new CorrelationData("");
+        //交换机，路由key，消息实体
+        rabbitTemplate.convertAndSend(RabbitConstants.PLACE_ORDER_EXCHANGE, RabbitConstants.PLACE_ORDER_QUEUE, message,correlationData);
+    }
 }

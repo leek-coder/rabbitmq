@@ -20,7 +20,12 @@ public class MessageProviderController {
 
 
     @RequestMapping(value = "/send")
-    public void test() {
+    public void send() {
         messageUtils.send("leek");
+    }
+
+    @RequestMapping(value = "/order")
+    public void order() {
+        messageUtils.order("订单过期未消费");
     }
 }
