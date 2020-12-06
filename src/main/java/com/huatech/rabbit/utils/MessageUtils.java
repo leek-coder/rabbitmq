@@ -19,6 +19,6 @@ public class MessageUtils {
     public void send(String message) {
         CorrelationData correlationData = new CorrelationData("");
         //交换机，路由key，消息实体
-        rabbitTemplate.convertAndSend(RabbitConstants.TEST_EXCHANGE, RabbitConstants.TEST_QUEUE+"000", message,correlationData);
+        rabbitTemplate.convertAndSend(RabbitConstants.TEST_EXCHANGE, RabbitConstants.TEST_QUEUE, message,correlationData);
     }
 }

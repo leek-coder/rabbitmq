@@ -2,6 +2,7 @@ package com.huatech.rabbit.config;
 
 import com.huatech.rabbit.constants.RabbitConstants;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,6 +20,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfiguration {
+
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory() {
+        SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        rabbitListenerContainerFactory.setConnectionFactory(connectionFactory());
+        //设置消息手动确认
+        rabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        return rabbitListenerContainerFactory;
+    }
 
     @Bean
     public ConnectionFactory connectionFactory() {
