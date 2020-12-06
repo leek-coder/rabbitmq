@@ -28,6 +28,8 @@ public class RabbitConfiguration {
         rabbitListenerContainerFactory.setConnectionFactory(connectionFactory());
         //设置消息手动确认
         rabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        //设置消息预取的数量
+        rabbitListenerContainerFactory.setPrefetchCount(50);
         return rabbitListenerContainerFactory;
     }
 
